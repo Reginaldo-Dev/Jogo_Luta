@@ -1,5 +1,13 @@
-let char = new Sorcerer('Reginaldo Francisco');
+let char = new Sorcerer('Reginaldo');
+let monster = new BigMonster();
 
-console.log(char.name);
-console.log(char.life);
-console.log(char.attack);
+// criando a stage
+
+const stage= new Stage (
+    char, 
+    monster,
+    document.querySelector('#char'),
+    document.querySelector('#monster'),
+);
+
+stage.start();
