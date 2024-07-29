@@ -1,4 +1,4 @@
-let char = new Sorcerer('Reginaldo');
+let char = new Sorcerer('Reginaldo Francisco');
 let monster = new BigMonster();
 
 // criando a stage
