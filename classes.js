@@ -1,27 +1,23 @@
-// knight ou Sorcerer
-// LittleMonster ou BigMonster
-
-//Personagem principal
 class Character {
-    
     _life = 1;
     maxLife = 1;
     attack = 0;
     defense = 0;
 
-    constructor (name) {
+    constructor(name) {
         this.name = name;
     }
 
     get life() {
         return this._life;
     }
+
     set life(newLife) {
-        return this._life = newLife < 0 ? 0 : newLife;
+        this._life = newLife < 0 ? 0 : newLife;
     }
 }
 
-//Personagem filho
+// Personagem filho
 
 class Knight extends Character {
     constructor(name) {
@@ -29,7 +25,7 @@ class Knight extends Character {
         this.life = 100;
         this.attack = 10;
         this.defense = 8;
-        this.maxLife = this.life
+        this.maxLife = this.life;
     }
 }
 
@@ -39,76 +35,109 @@ class Sorcerer extends Character {
         this.life = 80;
         this.attack = 15;
         this.defense = 3;
-        this.maxLife = this.life
+        this.maxLife = this.life;
     }
 }
 
-// mosnters
+// Monstros
 class LittleMonster extends Character {
     constructor() {
-        super('Little Moster');
+        super('Little Monster');
         this.life = 40;
         this.attack = 4;
         this.defense = 4;
-        this.maxLife = this.life
+        this.maxLife = this.life;
     }
 }
+
 class BigMonster extends Character {
     constructor() {
-        super('BigMonster');
+        super('Big Monster');
         this.life = 120;
         this.attack = 16;
         this.defense = 6;
-        this.maxLife = this.life
+        this.maxLife = this.life;
     }
 }
+
 class Stage {
-    constructor(fighter1, fighter2, fighter1El, fighter2El) {
+    constructor(fighter1, fighter2, fighter1El, fighter2El, logObject) {
         this.fighter1 = fighter1;
         this.fighter2 = fighter2;
         this.fighter1El = fighter1El;
         this.fighter2El = fighter2El;
+        this.log = logObject;
     }
+
     start() {
-        this.upDate();
+        this.update();
 
-        this.fighter1El.querySelector('.atackButton').addEventListener('click', () => this.doAttack(this.fighter1, this.fighter2));
-        this.fighter2El.querySelector('.atackButton').addEventListener('click', () => this.doAttack(this.fighter2, this.fighter1));
+        this.fighter1El.querySelector('.attackButton').addEventListener('click', () => this.doAttack(this.fighter1, this.fighter2));
+        this.fighter2El.querySelector('.attackButton').addEventListener('click', () => this.doAttack(this.fighter2, this.fighter1));
+    }
 
-   }
-    upDate() {
+    update() {
         // Fighter 1
         this.fighter1El.querySelector('.name').innerHTML = `${this.fighter1.name} - ${this.fighter1.life}HP`;
-        let f1Pct = (this.fighter1.life / this.fighter1.maxLife) *100;
+        let f1Pct = (this.fighter1.life / this.fighter1.maxLife) * 100;
         this.fighter1El.querySelector('.bar').style.width = `${f1Pct}%`;
 
         // Fighter 2
         this.fighter2El.querySelector('.name').innerHTML = `${this.fighter2.name} - ${this.fighter2.life}HP`;
-        let f2Pct = (this.fighter2.life / this.fighter2.maxLife) *100;
+        let f2Pct = (this.fighter2.life / this.fighter2.maxLife) * 100;
         this.fighter2El.querySelector('.bar').style.width = `${f2Pct}%`;
     }
+
     doAttack(attacking, attacked) {
-       if (attacking.life <= 0|| attacked.life <=0) {
-        console.log('Atacando cachorro morto');
-        return;
-       }
+        if (attacking.life <= 0 || attacked.life <= 0) {
+            this.log.addMessage('Atacando cachorro morto');
+            return;
+        }
 
-       let attackFator = (Math.random() * 2).toFixed(2);
-       let defenseFator = (Math.random() * 2).toFixed(2);
+        let attackFactor = Math.random().toFixed(2) * 2;
+        let defenseFactor = Math.random().toFixed(2) * 2;
 
-       let actualAttack = attacking.attack * attackFator;
-       let actualDefense = attacked.defense * defenseFator;
-       
-       if (actualAttack > actualDefense) {
+        let actualAttack = attacking.attack * attackFactor;
+        let actualDefense = attacked.defense * defenseFactor;
+
+        if (actualAttack > actualDefense) {
             attacked.life -= actualAttack;
-            console.log (`${attacking.name} causou ${actualAttack.toFixed(2)} de dano em ${attacked.name}`);
-       } else {
-        console.log(`${attacked.name} conseguuiu defender...`);
-       }
-       this.upDate();
+            this.log.addMessage(`${attacking.name} causou ${actualAttack.toFixed(2)} de dano em ${attacked.name}`);
+        } else {
+            this.log.addMessage(`${attacked.name} conseguiu defender...`);
+        }
+        this.update();
     }
 }
 
+class Log {
+    constructor(listEl) {
+        this.listEl = listEl;
+        this.list = [];
+    }
 
+    addMessage(msg) {
+        this.list.push(msg);
+        this.render();
+    }
 
+    render() {
+        this.listEl.innerHTML = ''; // Limpa a lista antes de renderizar
+        this.list.forEach(message => {
+            this.listEl.innerHTML += `<li>${message}</li>`;
+        });
+    }
+}
 
+// Exemplo de uso
+const logElement = document.querySelector('.log');
+const log = new Log(logElement);
+
+const knight = new Knight('Sir Gallahad');
+const bigMonster = new BigMonster();
+
+const fighter1Element = document.querySelector('#fighter1');
+const fighter2Element = document.querySelector('#fighter2');
+
+const stage = new Stage(knight, bigMonster, fighter1Element, fighter2Element, log);
+stage.start();
