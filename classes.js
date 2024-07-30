@@ -44,7 +44,6 @@ class Sorcerer extends Character {
 }
 
 // mosnters
-
 class LittleMonster extends Character {
     constructor() {
         super('Little Moster');
@@ -54,7 +53,6 @@ class LittleMonster extends Character {
         this.maxLife = this.life
     }
 }
-
 class BigMonster extends Character {
     constructor() {
         super('BigMonster');
@@ -64,9 +62,6 @@ class BigMonster extends Character {
         this.maxLife = this.life
     }
 }
-
-//Criando senário de luta
-
 class Stage {
     constructor(fighter1, fighter2, fighter1El, fighter2El) {
         this.fighter1 = fighter1;
@@ -80,8 +75,7 @@ class Stage {
         this.fighter1El.querySelector('.atackButton').addEventListener('click', () => this.doAttack(this.fighter1, this.fighter2));
         this.fighter2El.querySelector('.atackButton').addEventListener('click', () => this.doAttack(this.fighter2, this.fighter1));
 
-        // Todo o envendo do botão atacar
-    }
+   }
     upDate() {
         // Fighter 1
         this.fighter1El.querySelector('.name').innerHTML = `${this.fighter1.name} - ${this.fighter1.life}HP`;
@@ -94,8 +88,24 @@ class Stage {
         this.fighter2El.querySelector('.bar').style.width = `${f2Pct}%`;
     }
     doAttack(attacking, attacked) {
-        console.log(`${attacking.name} estar atacando ${attacked.name}`);
-        
+       if (attacking.life <= 0|| attacked.life <=0) {
+        console.log('Atacando cachorro morto');
+        return;
+       }
+
+       let attackFator = (Math.random() * 2).toFixed(2);
+       let defenseFator = (Math.random() * 2).toFixed(2);
+
+       let actualAttack = attacking.attack * attackFator;
+       let actualDefense = attacked.defense * defenseFator;
+       
+       if (actualAttack > actualDefense) {
+            attacked.life -= actualAttack;
+            console.log (`${attacking.name} causou ${actualAttack.toFixed(2)} de dano em ${attacked.name}`);
+       } else {
+        console.log(`${attacked.name} conseguuiu defender...`);
+       }
+       this.upDate();
     }
 }
 
