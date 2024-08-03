@@ -78,12 +78,12 @@ class Stage {
 
     update() {
         // Fighter 1
-        this.fighter1El.querySelector('.name').innerHTML = `${this.fighter1.name} - ${this.fighter1.life}HP`;
+        this.fighter1El.querySelector('.name').innerHTML = `${this.fighter1.name} - ${this.fighter1.life.toFixed(1)}`;
         let f1Pct = (this.fighter1.life / this.fighter1.maxLife) * 100;
         this.fighter1El.querySelector('.bar').style.width = `${f1Pct}%`;
 
         // Fighter 2
-        this.fighter2El.querySelector('.name').innerHTML = `${this.fighter2.name} - ${this.fighter2.life}HP`;
+        this.fighter2El.querySelector('.name').innerHTML = `${this.fighter2.name} - ${this.fighter2.life.toFixed(1)}`;
         let f2Pct = (this.fighter2.life / this.fighter2.maxLife) * 100;
         this.fighter2El.querySelector('.bar').style.width = `${f2Pct}%`;
     }
@@ -129,15 +129,3 @@ class Log {
     }
 }
 
-// Exemplo de uso
-const logElement = document.querySelector('.log');
-const log = new Log(logElement);
-
-const knight = new Knight('Sir Gallahad');
-const bigMonster = new BigMonster();
-
-const fighter1Element = document.querySelector('#fighter1');
-const fighter2Element = document.querySelector('#fighter2');
-
-const stage = new Stage(knight, bigMonster, fighter1Element, fighter2Element, log);
-stage.start();
